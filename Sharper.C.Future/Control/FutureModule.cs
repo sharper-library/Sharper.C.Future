@@ -78,7 +78,7 @@ public static class FutureModule
     =>
         Suspend(() => Now(a()));
 
-    public static Future<Unit> Delay(Action a)
+    public static Future<Unit> DelayAction(Action a)
     =>
         Suspend(() => Now(ToFunc(a)()));
 
@@ -93,6 +93,10 @@ public static class FutureModule
     public static Future<Unit> Raise(Exception e)
     =>
         new Future<Unit>(UnsafeNow(Error<Unit>(e)));
+
+    public static Future<A> Raise<A>(Exception e)
+    =>
+        new Future<A>(UnsafeNow(Error<A>(e)));
 
     public static Future<A> Recover<A>
       ( Func<Exception, Future<A>> f
