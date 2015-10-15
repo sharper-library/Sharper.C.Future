@@ -36,10 +36,13 @@ public static class UnsafeFutureModule
         public UnsafeFuture<A> Step()
         {
             var fa = this;
+            Console.WriteLine("a");
             while (fa.IsSynchronous)
             {
+                Console.WriteLine("b");
                 fa = fa.DoStep();
             }
+            Console.WriteLine("c");
             return fa;
         }
 
@@ -131,7 +134,12 @@ public static class UnsafeFutureModule
 
         protected override Unit DoRun(Func<B, Trampoline<Unit>> k)
         =>
-            Listen(x => Done(F(x)).Map(y => y.Run(k)));
+            Listen
+              ( x =>
+                    Suspend
+                      ( () => Done(F(x)).Map(y => y.Run(k))
+                      )
+              );
 
         protected override UnsafeFuture<B> DoStep()
         =>
