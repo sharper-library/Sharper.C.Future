@@ -4,7 +4,6 @@ os: Visual Studio 2015
 
 environment:
   DNX_FEED: https://www.nuget.org/api/v2
-  DNX_BUILD_VERSION: build-$(appveyor_build_number)
 
 nuget:
   account_feed: true
@@ -21,6 +20,7 @@ skip_commits:
   message: /\<\.nobuild\>
 
 init:
+  - ps: $env:DNX_BUILD_VERSION = 'build-{0:D5}' -f $env:APPVEYOR_BUILD_NUMBER
   - ps: dnvm install latest
 
 shallow_clone: true
