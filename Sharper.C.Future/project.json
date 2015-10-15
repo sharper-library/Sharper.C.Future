@@ -1,0 +1,23 @@
+{ "version": "0.1.0-*"
+, "description": "Futures."
+, "authors": [ "Jeremy Hughes" ]
+, "tags": [ "" ]
+, "projectUrl": "https://github.com/sharper-library/Sharper.C.Future"
+, "licenseUrl": "https://raw.githubusercontent.com/sharper-library/Sharper.C.Future/master/LICENSE.txt"
+
+, "dependencies":
+  { "Sharper.C.Unit": "0.1.0-*"
+  , "Sharper.C.Either": "0.1.0-*"
+  , "Sharper.C.Trampoline": "0.1.0-*"
+  , "Sharper.C.Promise": "0.1.0-*"
+  }
+
+, "frameworks":
+  { "dotnet":
+    { "dependencies":
+      { "System.Runtime": "4.0.20"
+      , "System.Linq": "4.0.0"
+      }
+    }
+  }
+}
