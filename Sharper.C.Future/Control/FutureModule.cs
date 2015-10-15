@@ -78,6 +78,10 @@ public static class FutureModule
     =>
         Suspend(() => Now(a()));
 
+    public static Future<Unit> Delay(Action a)
+    =>
+        Suspend(() => Now(ToFunc(a)()));
+
     public static Future<A> Now<A>(A a)
     =>
         new Future<A>(UnsafeNow(Result(a)));
