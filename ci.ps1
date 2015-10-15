@@ -30,7 +30,7 @@ function InstallCmd() {
 }
 
 function BuildCmd() {
-    $bversion = 'build-{0:D5}' -f $env:APPVEYOR_BUILD_NUMBER
+    $bversion = 'build-{0}' -f ($env:APPVEYOR_BUILD_NUMBER.PadLeft(5, '0'))
     $bkversion = ('build-{0:D5}' -f $env:APPVEYOR_BUILD_NUMBER)
     $env:DNX_BUILD_VERSION = 'build-{0:D5}' -f $env:APPVEYOR_BUILD_NUMBER
     write-host "appveyor-number ===>"
