@@ -24,16 +24,13 @@ function RestoreCmd() {
 }
 
 function InstallCmd() {
-    [Environment]::SetEnvironmentVariable(
-        'DNX_BUILD_VERSION',
-        'build-{0:D5}' -f $env:APPVEYOR_BUILD_NUMBER,
-        'User')
     nuget sources add -Name Sharper.C -Source $env:SHARPER_C_FEED
     dnvm install latest
     dnu restore
 }
 
 function BuildCmd() {
+    $env:DNX_BUILD_VERSION = 'build-{0:D5}' -f $env:APPVEYOR_BUILD_NUMBER
     dnu pack --configuration Release (PackageProjects)
 }
 
