@@ -85,6 +85,25 @@ public static class FutureModule
     public static Future<A> Suspend<A>(Func<Future<A>> f)
     =>
         new Future<A>(UnsafeSuspend(() => f().fa));
+
+    public static Future<Unit> Raise(Exception e)
+    =>
+        new Future<Unit>(UnsafeNow(Error<Unit>(e)));
+
+    public static Future<A> Recover<A>
+      ( Func<Exception, Future<A>> f
+      , Future<A> fa
+      )
+    =>
+        new Future<A>
+          ( fa.fa.FlatMap
+              ( ea =>
+                    ea.Match
+                      ( e => f(e).fa
+                      , a => UnsafeNow(Result(a))
+                      )
+              )
+          );
 }
 
 }
