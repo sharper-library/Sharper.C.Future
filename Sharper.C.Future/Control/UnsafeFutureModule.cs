@@ -11,12 +11,6 @@ using static UnitModule;
 
 public static class UnsafeFutureModule
 {
-    private static A pp<A>(string s, A a)
-    {
-        Console.WriteLine(s);
-        return a;
-    }
-
     public abstract class UnsafeFuture<A>
     {
         public abstract UnsafeFuture<B> FlatMap<B>(Func<A, UnsafeFuture<B>> f);
@@ -42,13 +36,10 @@ public static class UnsafeFutureModule
         public UnsafeFuture<A> Step()
         {
             var fa = this;
-            Console.WriteLine("a");
             while (fa.IsSynchronous)
             {
-                Console.WriteLine("b");
                 fa = fa.DoStep();
             }
-            Console.WriteLine("c");
             return fa;
         }
 
@@ -106,7 +97,7 @@ public static class UnsafeFutureModule
 
         protected override Unit DoRun(Func<A, Trampoline<Unit>> k)
         =>
-            pp("d", Listen(k));
+            Listen(k);
 
         protected override UnsafeFuture<A> DoStep()
         =>
@@ -140,12 +131,12 @@ public static class UnsafeFutureModule
 
         protected override Unit DoRun(Func<B, Trampoline<Unit>> k)
         =>
-            pp("e", Listen
+            Listen
               ( x =>
                     Suspend
                       ( () => Done(F(x)).Map(y => y.Run(k))
                       )
-              ));
+              );
 
         protected override UnsafeFuture<B> DoStep()
         =>
@@ -178,10 +169,8 @@ public static class UnsafeFutureModule
               );
 
         protected override Unit DoRun(Func<B, Trampoline<Unit>> k)
-        {
-            Console.WriteLine("f");
-            return Unreachable<Unit>();
-        }
+        =>
+            Unreachable<Unit>();
 
         protected override UnsafeFuture<B> DoStep()
         =>
@@ -208,7 +197,7 @@ public static class UnsafeFutureModule
 
         protected override Unit DoRun(Func<A, Trampoline<Unit>> k)
         =>
-            pp("g", k(Value).Eval());
+            k(Value).Eval();
 
         protected override UnsafeFuture<A> DoStep()
         =>
@@ -234,10 +223,8 @@ public static class UnsafeFutureModule
             UnsafeBindSuspend(Thunk, f);
 
         protected override Unit DoRun(Func<A, Trampoline<Unit>> k)
-        {
-            Console.WriteLine("h");
-            return Unreachable<Unit>();
-        }
+        =>
+            Unreachable<Unit>();
 
         protected override UnsafeFuture<A> DoStep()
         =>
