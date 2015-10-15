@@ -4,10 +4,11 @@ os: Visual Studio 2015
 
 environment:
   DNX_FEED: https://www.nuget.org/api/v2
+  SHARPER_C_FEED: https://www.myget.org/F/sharper-c/api/v2
 
 nuget:
-  account_feed: true
-  project_feed: true
+  account_feed: false
+  project_feed: false
   disable_publish_on_pr: true
 
 branches:
@@ -20,7 +21,6 @@ skip_commits:
   message: /\<\.nobuild\>
 
 init:
-  - ps: $env:DNX_BUILD_VERSION = 'build-{0:D5}' -f $env:APPVEYOR_BUILD_NUMBER
   - ps: dnvm install latest
 
 shallow_clone: true

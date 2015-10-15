@@ -1,5 +1,7 @@
 $TestsRegex = '\.Tests$'
 
+$env:DNX_BUILD_VERSION = 'build-{0:D5}' -f $env:APPVEYOR_BUILD_NUMBER
+
 function AllProjects() {
     Get-ChildItem */project.json
 }
@@ -24,6 +26,7 @@ function RestoreCmd() {
 }
 
 function InstallCmd() {
+    nuget sources add -Name Sharper.C -Source $env:SHARPER_C_FEED
     dnvm install latest
     dnu restore
 }
