@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Sharper.C.Data;
 
 namespace Sharper.C.Control
@@ -62,6 +63,20 @@ public static class FutureModule
         public Future<C> SelectMany<B, C>(Func<A, Future<B>> f, Func<A, B, C> g)
         =>
             FlatMap(a => f(a).Map(b => g(a, b)));
+
+        public async Task<A> RunAsTask()
+        {
+            var ea = await Task.Factory.StartNew(() => Eval(ExecInline).Wait);
+            return ResultOrThrow(ea);
+        }
+
+        public static implicit operator Future<A>(Task<A> ta)
+        =>
+            FromTask(ta);
+
+        public static implicit operator Task<A>(Future<A> fa)
+        =>
+            fa.RunAsTask();
     }
 
     public static Future<A> Async<A>
@@ -111,6 +126,23 @@ public static class FutureModule
                       , a => UnsafeNow(Result(a))
                       )
               )
+          );
+
+    public static Future<A> FromTask<A>(Task<A> t)
+    =>
+        Async<A>
+          ( async k =>
+            {
+                try
+                {
+                    var a = await t;
+                    k(Result(a));
+                }
+                catch (Exception e)
+                {
+                    k(Error<A>(e));
+                }
+            }
           );
 }
 
