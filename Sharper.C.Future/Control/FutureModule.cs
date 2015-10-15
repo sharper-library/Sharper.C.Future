@@ -77,7 +77,7 @@ public static class FutureModule
     =>
         new Future<A>
           ( UnsafeAsync<Either<Exception, A>>
-              ( k => ToFunc(listen)(a => Done(k(a)))
+              ( k => ToFunc(listen)(a => k(a).Eval())
               )
           );
 
