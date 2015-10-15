@@ -1,0 +1,61 @@
+version: '{branch}-{build}'
+
+os: Visual Studio 2015
+
+environment:
+  DNX_FEED: https://www.nuget.org/api/v2
+  DNX_BUILD_VERSION: build-$(appveyor_build_number)
+
+nuget:
+  account_feed: true
+  project_feed: true
+  disable_publish_on_pr: true
+
+branches:
+  only:
+    - master
+
+skip_tags: true
+
+skip_commits:
+  message: /\<\.nobuild\>
+
+init:
+  - ps: dnvm install latest
+
+shallow_clone: true
+
+clone_depth: 1
+
+install:
+  - ps: ./ci install
+
+build_script:
+  - ps: ./ci build
+
+test_script:
+  - ps: ./ci test
+
+artifacts:
+  - path: '**\*.nupkg'
+
+deploy:
+  - provider: Github
+    artifact: /.*\.nupkg/
+    draft: false
+    prerelease: false
+    on:
+      branch: master
+      appveyor_repo_tag: true
+
+  - provider: NuGet
+    server: https://www.myget.org/F/sharper-c/api/v2/package
+    api_key:
+      secure: vw1oq34RgUGX7J5FSU4KwT0OCyr/OBaY8NGAqa096ahvtmDmkWHUTNXdZ6cMd6Q8
+    skip_symbols: false
+    symbol_server: https://nuget.symbolsource.org/MyGet/sharper-c
+
+notifications:
+  - provider: Email
+    to: jedahu@gmail.com
+    on_build_status_changed: true
