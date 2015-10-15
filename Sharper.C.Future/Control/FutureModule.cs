@@ -69,14 +69,6 @@ public static class FutureModule
             var ea = await Task.Factory.StartNew(() => Eval(ExecInline).Wait);
             return ResultOrThrow(ea);
         }
-
-        public static implicit operator Future<A>(Task<A> ta)
-        =>
-            FromTask(ta);
-
-        public static implicit operator Task<A>(Future<A> fa)
-        =>
-            fa.RunAsTask();
     }
 
     public static Future<A> Async<A>
@@ -128,7 +120,7 @@ public static class FutureModule
               )
           );
 
-    public static Future<A> FromTask<A>(Task<A> t)
+    public static Future<A> Await<A>(Task<A> t)
     =>
         Async<A>
           ( async k =>
