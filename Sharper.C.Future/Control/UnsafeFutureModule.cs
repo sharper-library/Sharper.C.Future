@@ -131,12 +131,7 @@ public static class UnsafeFutureModule
 
         protected override Unit DoRun(Func<B, Trampoline<Unit>> k)
         =>
-            Listen
-              ( x =>
-                    Suspend
-                      ( () => Done(F(x)).Map(y => y.Run(k))
-                      )
-              );
+            Listen(x => Done(F(x)).Map(y => y.Run(k)));
 
         protected override UnsafeFuture<B> DoStep()
         =>
