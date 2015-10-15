@@ -1,5 +1,4 @@
 using System;
-using Sharper.C.Control;
 using Sharper.C.Data;
 
 namespace Sharper.C.Control
