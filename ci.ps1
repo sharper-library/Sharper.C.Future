@@ -31,6 +31,8 @@ function InstallCmd() {
 
 function BuildCmd() {
     $env:DNX_BUILD_VERSION = 'build-{0:D5}' -f $env:APPVEYOR_BUILD_NUMBER
+    write-host "build-version ===>"
+    write-host $env:DNX_BUILD_VERSION
     dnu pack --configuration Release (PackageProjects)
 }
 
