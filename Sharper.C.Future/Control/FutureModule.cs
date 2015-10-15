@@ -105,20 +105,28 @@ public static class FutureModule
     =>
         new Future<A>(UnsafeNow(Error<A>(e)));
 
-    public static Future<A> Recover<A>
-      ( Func<Exception, Future<A>> f
+    public static Future<A> Recover<E, A>
+      ( Func<E, Future<A>> f
       , Future<A> fa
       )
+      where E : Exception
     =>
         new Future<A>
           ( fa.fa.FlatMap
               ( ea =>
                     ea.Match
-                      ( e => f(e).fa
+                      ( e => e is E ? f(e as E).fa : UnsafeNow(Error<A>(e))
                       , a => UnsafeNow(Result(a))
                       )
               )
           );
+
+    public static Future<A> Recover<A>
+      ( Func<Exception, Future<A>> f
+      , Future<A> fa
+      )
+    =>
+        Recover<Exception, A>(f, fa);
 
     public static Future<A> Await<A>(Task<A> t)
     =>
